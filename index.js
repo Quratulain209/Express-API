@@ -11,11 +11,6 @@ app.use('/api', require('./API/Products/Routers'))
 app.use('/api', require('./API/Category/Routers'))
 app.use('/api', require('./API/Brands/Routers'))
 
-// How to connect Database
-// mongoose.connect(process.env.MONGO_URL)
-//     .then(() => console.log("DB Connected"))
-//     .catch((err) => console.log("Found issues"))
-
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })

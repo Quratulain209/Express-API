@@ -59,7 +59,7 @@ const Login = async (req, res) => {
 
     else {
         try {
-            await connect(process.env.MONGO_URi)
+            await connect(process.env.MONGO_URI)
             console.log("DB connected")
 
             const checkuserExist = await User.findOne({ email: email })
@@ -119,7 +119,7 @@ const Login = async (req, res) => {
 const getAllUser = async (req, res) => {
 
     try {
-        await connect(process.env.MONGO_URi)
+        await connect(process.env.MONGO_URI)
         console.log("DB connected")
         const alluser = await User.find()
         res.json(
@@ -265,7 +265,4 @@ const DeleteUser = async (req, res) => {
 
 
 }
-
-
-
 module.exports = { Login, Signup, getAllUser, getUserById, getuserbyEmail, DeleteUser, UpdateUser }
