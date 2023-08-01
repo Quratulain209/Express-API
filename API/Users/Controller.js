@@ -189,7 +189,7 @@ const getuserbyEmail = async (req, res) => {
 
 const UpdateUser = async (req, res) => {
 
-    const { _id, username, profile_pic } = req.body
+    const { _id, username, email, profile_pic } = req.body
     if (!_id) {
         res.status(403).json({
             message: "Missing Required Field"
@@ -198,7 +198,7 @@ const UpdateUser = async (req, res) => {
 
     else {
         const filter = { _id };
-        const update = { username, profile_pic };
+        const update = { username, email, profile_pic };
 
         try {
 
