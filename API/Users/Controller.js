@@ -15,7 +15,7 @@ const Signup = async (req, res) => {
 
     else {
         try {
-            await connect(process.env.MONGO_URL)
+            await connect(process.env.MONGO_URI)
             console.log("DB connected")
 
             const userExist = await User.exists({ email: email })
@@ -59,7 +59,7 @@ const Login = async (req, res) => {
 
     else {
         try {
-            await connect(process.env.MONGO_URL)
+            await connect(process.env.MONGO_URi)
             console.log("DB connected")
 
             const checkuserExist = await User.findOne({ email: email })
@@ -119,7 +119,7 @@ const Login = async (req, res) => {
 const getAllUser = async (req, res) => {
 
     try {
-        await connect(process.env.MONGO_URL)
+        await connect(process.env.MONGO_URi)
         console.log("DB connected")
         const alluser = await User.find()
         res.json(
@@ -143,7 +143,7 @@ const getUserById = async (req, res) => {
     const { _id } = req.query
 
     try {
-        await connect(process.env.MONGO_URL)
+        await connect(process.env.MONGO_URI)
         console.log("DB connected")
 
         const userbyid = await User.findOne({ _id })
@@ -167,7 +167,7 @@ const getuserbyEmail = async (req, res) => {
     const { email } = req.query
 
     try {
-        await connect(process.env.MONGO_URL)
+        await connect(process.env.MONGO_URI)
         console.log("DB connected")
 
         const userbyemail = await User.findOne({ email })
@@ -187,6 +187,50 @@ const getuserbyEmail = async (req, res) => {
     }
 }
 
+const UpdateUser = async (req, res) => {
+
+    const { _id, username, profile_pic } = req.body
+    if (!_id) {
+        res.status(403).json({
+            message: "Missing Required Field"
+        })
+    }
+
+    else {
+        const filter = { _id };
+        const update = { username, profile_pic };
+
+        try {
+
+            await connect(process.env.MONGO_URI)
+            console.log("DB connected")
+
+            await User.findOneAndUpdate(filter, update, {
+                new: true
+            });
+
+            const updateuser = await User.find()
+
+            res.json({
+                message: "Success",
+                User: updateuser
+            })
+        }
+        catch (error) {
+            res.status(404).json(
+                {
+                    message: error.messaage
+                }
+            )
+
+        }
+    }
+
+
+
+
+}
+
 const DeleteUser = async (req, res) => {
     const { _id } = req.body
     if (!_id) {
@@ -197,7 +241,7 @@ const DeleteUser = async (req, res) => {
 
     else {
         try {
-            await connect(process.env.MONGO_URL)
+            await connect(process.env.MONGO_URI)
             console.log("DB connected")
 
             await User.deleteOne({ _id })
@@ -222,49 +266,6 @@ const DeleteUser = async (req, res) => {
 
 }
 
-const UpdateUser = async (req, res) => {
 
-    const { _id, username, profile_pic } = req.body
-
-    // if (!_id || !username) {
-    //     res.status(403).json({
-    //         message: "Missing Required Field"
-    //     })
-    // }
-
-    // else {
-        const filter = { _id };
-        const update = { username, profile_pic };
-
-        try {
-
-            await connect(process.env.MONGO_URL)
-            console.log("DB connected")
-
-            await User.findOneAndUpdate(filter, update, {
-                new: true
-            });
-
-            const updateuser = await User.find()
-
-            res.json({
-                message: "Success",
-                User: updateuser
-            })
-        }
-        catch (error) {
-            res.status(404).json(
-                {
-                    message: error.messaage
-                }
-            )
-
-        }
-    // }
-
-
-
-
-}
 
 module.exports = { Login, Signup, getAllUser, getUserById, getuserbyEmail, DeleteUser, UpdateUser }

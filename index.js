@@ -9,7 +9,7 @@ app.use(express.json())
 app.use('/api', require('./API/Users/Routers'))
 app.use('/api', require('./API/Products/Routers'))
 app.use('/api', require('./API/Category/Routers'))
-// app.use('/api', require('./API/Brands/Routers'))
+app.use('/api', require('./API/Brands/Routers'))
 
 // How to connect Database
 // mongoose.connect(process.env.MONGO_URL)

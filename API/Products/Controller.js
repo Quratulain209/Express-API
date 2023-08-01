@@ -1,56 +1,30 @@
+require('dotenv').config()
+const Product = require('./Schema')
+const { connect } = require('mongoose')
 
-const GetAllProduct = (req, res) => {
-    res.json(
-        {
-            products: [
-                {
-                    "id": 1,
-                    "title": "iPhone 9",
-                    "description": "An apple mobile which is nothing like apple",
-                    "price": 549,
-                    "discountPercentage": 12.96,
-                    "rating": 4.69,
-                    "stock": 94,
-                    "brand": "Apple",
-                    "category": "smartphones",
-                    "thumbnail": "https://i.dummyjson.com/data/products/1/thumbnail.jpg",
-                    "images": [
-                      "https://i.dummyjson.com/data/products/1/1.jpg",
-                      "https://i.dummyjson.com/data/products/1/2.jpg",
-                      "https://i.dummyjson.com/data/products/1/3.jpg",
-                      "https://i.dummyjson.com/data/products/1/4.jpg",
-                      "https://i.dummyjson.com/data/products/1/thumbnail.jpg"
-                    ]
-                  },
-                  {
-                    "id": 2,
-                    "title": "iPhone X",
-                    "description": "SIM-Free, Model A19211 6.5-inch Super Retina HD display with OLED technology A12 Bionic chip with ...",
-                    "price": 899,
-                    "discountPercentage": 17.94,
-                    "rating": 4.44,
-                    "stock": 34,
-                    "brand": "Apple",
-                    "category": "smartphones",
-                    "thumbnail": "https://i.dummyjson.com/data/products/2/thumbnail.jpg",
-                    "images": [
-                      "https://i.dummyjson.com/data/products/2/1.jpg",
-                      "https://i.dummyjson.com/data/products/2/2.jpg",
-                      "https://i.dummyjson.com/data/products/2/3.jpg",
-                      "https://i.dummyjson.com/data/products/2/thumbnail.jpg"
-                    ]
-                  }
-            ]
-        }
-    )
+
+const CreateProduct = async (req, res) => {
+    
 }
 
-const AddProduct = (req, res) => {
-    res.status(200).json(
-        {
-            message: "Product Added Sucessfully"
-        }
-    )
+const getAllProduct = async (req, res) => {
+    
 }
 
-module.exports = { GetAllProduct, AddProduct }
+const getProductByBrand  = async (req, res) => {
+    
+}
+
+const getProductByCategory  = async (req, res) => {
+    
+}
+
+const UpdateProduct  = async (req, res) => {
+    
+}
+
+const DeleteProduct  = async (req, res) => {
+    
+}
+
+module.exports = { CreateProduct, getAllProduct,  getProductByBrand, getProductByCategory, UpdateProduct, DeleteProduct}
