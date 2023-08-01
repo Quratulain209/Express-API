@@ -7,92 +7,112 @@ const { sign } = require('jsonwebtoken')
 const Signup = async (req, res) => {
     const { username, password, email } = req.body;
 
-    try {
-        await connect(process.env.MONGO_URL)
-        console.log("DB connected")
+    if (!username || !password || !email) {
+        res.status(403).json({
+            message: "Missing Required Field"
+        })
+    }
 
-        const userExist = await User.exists({ email: email })
-        if (userExist) {
-            res.json({
-                Message: "User already exist"
-            })
-        }
-        else {
-            await User.create({ username, email, password: await hash(password, 12) })
+    else {
+        try {
+            await connect(process.env.MONGO_URL)
+            console.log("DB connected")
 
-            console.log(" User Created")
+            const userExist = await User.exists({ email: email })
+            if (userExist) {
+                res.json({
+                    Message: "User already exist"
+                })
+            }
+            else {
+                await User.create({ username, email, password: await hash(password, 12) })
 
-            res.status(201).json(
+                console.log(" User Created")
+
+                res.status(201).json(
+                    {
+                        Message: "SignUP SucessFully"
+                    }
+                )
+            }
+
+        } catch (error) {
+            res.status(404).json(
                 {
-                    Message: "SignUP SucessFully"
+                    message: error.messaage
                 }
             )
         }
-
-    } catch (error) {
-        res.status(404).json(
-            {
-                message: error.messaage
-            }
-        )
     }
+
+
 }
 
 const Login = async (req, res) => {
     const { email, password } = req.body;
 
-    try {
-        await connect(process.env.MONGO_URL)
-        console.log("DB connected")
+    if (!password || !email) {
+        res.status(403).json({
+            message: "Missing Required Field"
+        })
+    }
 
-        const checkuserExist = await User.findOne({ email: email })
+    else {
+        try {
+            await connect(process.env.MONGO_URL)
+            console.log("DB connected")
 
-        if (!checkuserExist) {
-            res.status(404).json(
-                {
-                    Message: "User Does not Exist"
-                }
-            )
-        }
-        else {
-            const decrypPassword = await compare(password, checkuserExist.password)
-            console.log(decrypPassword)
+            const checkuserExist = await User.findOne({ email: email })
 
-            if (email == checkuserExist.email && decrypPassword) {
-
-                const token = sign(
+            if (!checkuserExist) {
+                res.status(404).json(
                     {
-                        username: checkuserExist.username,
-                        id: checkuserExist._id,
-                        email: checkuserExist.email
-                    }
-                    ,
-                    process.env.JWT_SECRET
-                )
-                res.status(200).json(
-                    {
-                        Message: "Sucessfully Login",
-                        token: token
+                        Message: "User Does not Exist"
                     }
                 )
             }
             else {
-                res.json(
-                    {
-                        Message: "Invalid Credentials"
-                    }
-                )
+                const decrypPassword = await compare(password, checkuserExist.password)
+                console.log(decrypPassword)
+
+                if (email == checkuserExist.email && decrypPassword) {
+
+                    const token = sign(
+                        {
+                            username: checkuserExist.username,
+                            id: checkuserExist._id,
+                            email: checkuserExist.email
+                        }
+                        ,
+                        process.env.JWT_SECRET
+                    )
+                    res.status(200).json(
+                        {
+                            Message: "Sucessfully Login",
+                            token: token
+                        }
+                    )
+                }
+                else {
+                    res.json(
+                        {
+                            Message: "Invalid Credentials"
+                        }
+                    )
+                }
             }
+        }
+
+        catch (error) {
+            res.status(404).json(
+                {
+                    message: error.messaage
+                }
+            )
         }
     }
 
-    catch (error) {
-        res.status(404).json(
-            {
-                message: error.messaage
-            }
-        )
-    }
+
 
 }
 
@@ -169,60 +189,82 @@ const getuserbyEmail = async (req, res) => {
 
 const DeleteUser = async (req, res) => {
     const { _id } = req.body
-
-    try {
-        await connect(process.env.MONGO_URL)
-        console.log("DB connected")
-
-        await User.deleteOne({ _id })
-        const user = await User.find()
-
-        res.status(200).json(
-            {
-                message: "Delete Sucessfully",
-                user
-            }
-        )
-
-    } catch (error) {
-        res.status(404).json(
-            {
-                message: error.messaage
-            }
-        )
+    if (!_id) {
+        res.status(403).json({
+            message: "Missing Required Field"
+        })
     }
+
+    else {
+        try {
+            await connect(process.env.MONGO_URL)
+            console.log("DB connected")
+
+            await User.deleteOne({ _id })
+            const user = await User.find()
+
+            res.status(200).json(
+                {
+                    message: "Delete Sucessfully",
+                    user
+                }
+            )
+
+        } catch (error) {
+            res.status(404).json(
+                {
+                    message: error.messaage
+                }
+            )
+        }
+    }
+
+
 }
 
 const UpdateUser = async (req, res) => {
 
     const { _id, username, profile_pic } = req.body
 
-    const filter = { _id };
-    const update = { username, profile_pic };
+    // if (!_id || !username) {
+    //     res.status(403).json({
+    //         message: "Missing Required Field"
+    //     })
+    // }
 
-    try {
-        await connect(process.env.MONGO_URI)
-        console.log("DB connected")
-        await User.findOneAndUpdate(filter, update, {
-            new: true
-        });
+    // else {
+        const filter = { _id };
+        const update = { username, profile_pic };
 
-        const updateuser =  await User.find()
+        try {
 
-        res.json({
-            message: "Success",
-            updateuser
-        })
-    }
-    catch (error) {
-        res.status(404).json(
-            {
-                message: error.messaage
-            }
-        )
+            await connect(process.env.MONGO_URL)
+            console.log("DB connected")
 
-    }
+            await User.findOneAndUpdate(filter, update, {
+                new: true
+            });
+
+            const updateuser = await User.find()
+
+            res.json({
+                message: "Success",
+                User: updateuser
+            })
+        }
+        catch (error) {
+            res.status(404).json(
+                {
+                    message: error.messaage
+                }
+            )
+
+        }
+    // }
+
+
+
+
 }
 
 module.exports = { Login, Signup, getAllUser, getUserById, getuserbyEmail, DeleteUser, UpdateUser }
-

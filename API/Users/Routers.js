@@ -10,5 +10,4 @@ Router.get('/get-user-by-email', getuserbyEmail)
 Router.delete('/delete-user', DeleteUser)
 Router.put('/update-user', UpdateUser)
 
-
 module.exports = Router
