@@ -89,6 +89,26 @@ const getProductByBrand = async (req, res) => {
     }
 }
 
+const getProductById = async (req, res) => {
+    const { _id } = req.query
+    try {
+        await connect(process.env.MONGO_URI)
+        console.log("DB CONNECTED")
+
+        const product = await Product.findOne({ _id })
+
+        res.status(200).json({
+            Product: product
+        })
+
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            message: "Database Connection Failed"
+        })
+    }
+}
+
 const getProductByCategory = async (req, res) => {
     const { category } = req.query
     try {
@@ -169,4 +189,4 @@ const DeleteProduct = async (req, res) => {
     }
 }
 
-module.exports = { CreateProduct, getAllProduct, getProductByBrand, getProductByCategory, UpdateProduct, DeleteProduct }
+module.exports = { CreateProduct, getAllProduct, getProductByBrand, getProductById, getProductByCategory, UpdateProduct, DeleteProduct }
