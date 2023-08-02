@@ -3,7 +3,7 @@ const app = express()
 require('dotenv').config()
 const mongoose = require('mongoose')
 const cors = require('cors')
-const port = process.env.SERVER_PORT
+const port = process.env.SERVER_PORT || 3200
 app.use(express.json())
 
 app.use(
